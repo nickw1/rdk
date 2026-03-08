@@ -1,8 +1,9 @@
 import {
+  // CompositeGeoLine,
   GeoLine,
-  GeoPolygon,
   GeolocationAnchor,
   GeolocationSession,
+  GeoPolygon,
   XR,
 } from "@omnidotdev/rdk";
 import { Canvas } from "@react-three/fiber";
@@ -60,8 +61,8 @@ const App = () => (
       <GeolocationSession
         options={{
           // enable fake GPS for testing: uncomment and adjust to preferred location
-          // fakeLat: BASE_LATITUDE,
-          // fakeLon: BASE_LONGITUDE,
+          fakeLat: BASE_LATITUDE,
+          fakeLon: BASE_LONGITUDE,
           // handle GPS position updates
           onGpsUpdate: (pos, distMoved) => {
             // biome-ignore lint/suspicious/noConsole: demo app
@@ -177,4 +178,12 @@ const App = () => (
   </Canvas>
 );
 
+/*
+<CompositeGeoLine coordinates={PATH_COORDINATES} color={0xff4444} />
+
+<CompositeGeoLine
+  coordinates={DASHED_PATH_COORDINATES}
+  color={0xffaa00}
+  />
+*/
 export default App;

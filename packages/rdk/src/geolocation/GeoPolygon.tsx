@@ -69,10 +69,11 @@ const GeoPolygon = ({
     geometry: ShapeGeometry;
     avgElevation: number;
   } | null>(null);
+  const [hasAnchor, setHasAnchor] = useState(false);
 
   useEffect(() => {
     if (!geo.isSuccess || coordinates.length < 3) return;
-
+    //    console.log("effect: GeoPolygon");
     const [lon, lat, alt = 0] = coordinates[0];
 
     // `onAttach` receives `locar` directly from the backend - no stale closure
@@ -146,14 +147,17 @@ const GeoPolygon = ({
       setGeometryData({ geometry: shapeGeometry, avgElevation });
     };
 
-    geo.registerAnchor(anchorId, {
-      anchor,
-      isAttached: false,
-      latitude: lat,
-      longitude: lon,
-      altitude: alt,
-      onAttach,
-    });
+    if (!hasAnchor) {
+      geo.registerAnchor(anchorId, {
+        anchor,
+        isAttached: false,
+        latitude: lat,
+        longitude: lon,
+        altitude: alt,
+        onAttach,
+      });
+      setHasAnchor(true);
+    }
 
     return () => {
       geo.unregisterAnchor(anchorId);
@@ -165,6 +169,7 @@ const GeoPolygon = ({
     anchorId,
     anchor,
     coordinates,
+    hasAnchor,
     holes,
   ]);
 
