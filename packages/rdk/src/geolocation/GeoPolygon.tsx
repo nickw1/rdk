@@ -69,7 +69,6 @@ const GeoPolygon = ({
     geometry: ShapeGeometry;
     avgElevation: number;
   } | null>(null);
-  const [hasAnchor, setHasAnchor] = useState(false);
 
   useEffect(() => {
     if (!geo.isSuccess || coordinates.length < 3) return;
@@ -144,20 +143,19 @@ const GeoPolygon = ({
       // rotate to lie flat on XZ plane
       shapeGeometry.rotateX(-Math.PI / 2);
 
-      setGeometryData({ geometry: shapeGeometry, avgElevation });
+      if (geometryData === null) {
+        setGeometryData({ geometry: shapeGeometry, avgElevation });
+      }
     };
 
-    if (!hasAnchor) {
-      geo.registerAnchor(anchorId, {
-        anchor,
-        isAttached: false,
-        latitude: lat,
-        longitude: lon,
-        altitude: alt,
-        onAttach,
-      });
-      setHasAnchor(true);
-    }
+    geo.registerAnchor(anchorId, {
+      anchor,
+      isAttached: false,
+      latitude: lat,
+      longitude: lon,
+      altitude: alt,
+      onAttach,
+    });
 
     return () => {
       geo.unregisterAnchor(anchorId);
@@ -169,7 +167,7 @@ const GeoPolygon = ({
     anchorId,
     anchor,
     coordinates,
-    hasAnchor,
+    geometryData,
     holes,
   ]);
 

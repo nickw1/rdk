@@ -55,7 +55,6 @@ const GeoLine = ({
   const [anchor] = useState(() => new Group());
   const anchorId = useMemo(() => Math.random().toString(36).slice(2, 11), []);
   const [line, setLine] = useState<Line2 | null>(null);
-  const [hasAnchor, setHasAnchor] = useState(false);
 
   useEffect(() => {
     if (!geo.isSuccess || coordinates.length < 2) return;
@@ -92,20 +91,17 @@ const GeoLine = ({
 
       if (isDashed) lineObj.computeLineDistances();
 
-      setLine(lineObj);
+      if (line === null) setLine(lineObj);
     };
 
-    if (!hasAnchor) {
-      geo.registerAnchor(anchorId, {
-        anchor,
-        isAttached: false,
-        latitude: lat,
-        longitude: lon,
-        altitude: alt,
-        onAttach,
-      });
-      setHasAnchor(true);
-    }
+    geo.registerAnchor(anchorId, {
+      anchor,
+      isAttached: false,
+      latitude: lat,
+      longitude: lon,
+      altitude: alt,
+      onAttach,
+    });
 
     return () => {
       geo.unregisterAnchor(anchorId);
@@ -118,10 +114,10 @@ const GeoLine = ({
     anchor,
     coordinates,
     color,
-    hasAnchor,
     isDashed,
     dashSize,
     gapSize,
+    line,
     lineWidth,
   ]);
 
