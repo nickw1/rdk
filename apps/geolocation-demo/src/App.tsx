@@ -1,8 +1,8 @@
 import {
   GeoLine,
-  GeoPolygon,
   GeolocationAnchor,
   GeolocationSession,
+  GeoPolygon,
   XR,
 } from "@omnidotdev/rdk";
 import { Canvas } from "@react-three/fiber";
@@ -60,8 +60,8 @@ const App = () => (
       <GeolocationSession
         options={{
           // enable fake GPS for testing: uncomment and adjust to preferred location
-          // fakeLat: BASE_LATITUDE,
-          // fakeLon: BASE_LONGITUDE,
+          fakeLat: BASE_LATITUDE,
+          fakeLon: BASE_LONGITUDE,
           // handle GPS position updates
           onGpsUpdate: (pos, distMoved) => {
             // biome-ignore lint/suspicious/noConsole: demo app
