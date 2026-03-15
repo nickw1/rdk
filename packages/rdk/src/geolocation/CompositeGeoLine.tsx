@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   BufferAttribute,
   BufferGeometry,
+  DoubleSide,
   Group,
   Mesh,
   MeshBasicMaterial,
@@ -41,7 +42,6 @@ const CompositeGeoLine = ({
   const [anchor] = useState(() => new Group());
   const anchorId = useMemo(() => Math.random().toString(36).slice(2, 11), []);
   const [line, setLine] = useState<Mesh | null>(null);
-  const [hasAnchor, setHasAnchor] = useState(false);
 
   useEffect(() => {
     if (!geo.isSuccess || coordinates.length < 2) return;
@@ -128,26 +128,23 @@ const CompositeGeoLine = ({
 
       const geometry = makeWayGeom(pts, lineWidth);
 
-      const material = new MeshBasicMaterial({ color });
+      const material = new MeshBasicMaterial({ color, side: DoubleSide });
 
       // console.log('geometry:');
       // console.log(geometry);
       const mesh = new Mesh(geometry, material);
 
-      setLine(mesh);
+      if (line === null) setLine(mesh);
     };
 
-    if (!hasAnchor) {
-      geo.registerAnchor(anchorId, {
-        anchor,
-        isAttached: false,
-        latitude: lat,
-        longitude: lon,
-        altitude: alt,
-        onAttach,
-      });
-      setHasAnchor(true);
-    }
+    geo.registerAnchor(anchorId, {
+      anchor,
+      isAttached: false,
+      latitude: lat,
+      longitude: lon,
+      altitude: alt,
+      onAttach,
+    });
 
     return () => {
       geo.unregisterAnchor(anchorId);
@@ -160,7 +157,7 @@ const CompositeGeoLine = ({
     anchor,
     coordinates,
     color,
-    hasAnchor,
+    line,
     lineWidth,
   ]);
 
